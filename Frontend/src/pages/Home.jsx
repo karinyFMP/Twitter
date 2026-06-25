@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext'; // Ajuste o caminho conforme seu projeto
-import PostItem from './PostItem';
+import PostItem from "../components/PostItem";
 
 export default function Home() {
   const { user, token } = useAuth(); // Pega o usuário logado e o token JWT do contexto
