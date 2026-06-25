@@ -101,4 +101,17 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
+
+const registrarUsuario = async (req, res) => {
+    const { nome, email, senha } = req.body;
+    
+    // GERA O HASH DA SENHA (Atendendo ao requisito obrigatório)
+    const saltRounds = 10;
+    const senhaComHash = await bcrypt.hash(senha, saltRounds);
+    
+    // Salva no banco SQLite usando a 'senhaComHash'
+    // ...
+}
+
 module.exports = router;
