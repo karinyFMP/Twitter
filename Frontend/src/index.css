@@ -1,4 +1,16 @@
+/* ==========================================
+   CONFIGURAÇÕES GLOBAIS E VARIÁVEIS BASE
+   ========================================== */
 :root {
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+}
+
+/* ==========================================
+   TEMA CLARO (Padrão ou quando body tiver .light)
+   ========================================== */
+body, body.light {
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
@@ -8,52 +20,59 @@
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
+  /* Aplicação das fontes e cores base */
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
+  
+  /* Suavização de renderização */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 
-  @media (max-width: 1024px) {
+  /* Transição suave ao trocar de tema */
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* RESPONSIVIDADE DA FONTE */
+@media (max-width: 1024px) {
+  body, body.light, body.dark {
     font-size: 16px;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* ==========================================
+   TEMA ESCURO (Ativado via botão/Context no body)
+   ========================================== */
+body.dark {
+  --text: #9ca3af;
+  --text-h: #f3f4f6;
+  --bg: #16171d;
+  --border: #2e303a;
+  --code-bg: #1f2028;
+  --accent: #c084fc;
+  --accent-bg: rgba(192, 132, 252, 0.15);
+  --accent-border: rgba(192, 132, 252, 0.5);
+  --social-bg: rgba(47, 48, 58, 0.5);
+  --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  background: var(--bg);
+  color: var(--text);
 }
 
-body {
-  margin: 0;
+/* Inversão de ícones específicos no modo escuro */
+body.dark #social .button-icon {
+  filter: invert(1) brightness(2);
 }
 
+/* ==========================================
+   ESTRUTURA DE LAYOUT (Mantido igual ao seu)
+   ========================================== */
 #root {
   width: 1126px;
   max-width: 100%;
@@ -64,13 +83,15 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  /* Transição na borda do container principal */
+  transition: border-color 0.3s ease; 
 }
 
-h1,
-h2 {
+h1, h2 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
+  transition: color 0.3s ease;
 }
 
 h1 {
@@ -82,6 +103,7 @@ h1 {
     margin: 20px 0;
   }
 }
+
 h2 {
   font-size: 24px;
   line-height: 118%;
@@ -91,16 +113,17 @@ h2 {
     font-size: 20px;
   }
 }
+
 p {
   margin: 0;
 }
 
-code,
-.counter {
+code, .counter {
   font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;
   color: var(--text-h);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {
