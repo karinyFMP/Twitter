@@ -1,0 +1,50 @@
+"prompt para criar gitignore feito pela Kariny ": quero criar um git ignore desse projeto 
+
+"prompt para criar tabelas do banco feito pela Kariny ": Atue como: Desenvolvedor Back-end Sênior especialista em Node.js e bancos de dados relacionais.O problema: quero o codigo Preciso configurar a conexão inicial com o banco de dados e criar o esquema de tabelas para um clone do Twitter. As tabelas são: users, posts e favorites.Detalhes e Restrições: Utilize apenas a biblioteca sqlite3 (sem ORMs complexos). A tabela users deve suportar o armazenamento de hash de senhas. As tabelas posts e favorites devem ter chaves estrangeiras (foreign keys) mapeando corretamente para os usuários e posts correspondentes.Formato: Retorne apenas o código JavaScript completo e comentado para o arquivo de configuração do banco (ex: database.js), garantindo que as tabelas sejam criadas caso não existam.
+
+"prompt para criar as rotas feito pela Kariny ": Atue como: Especialista em Segurança e Desenvolvedor Back-end com Express.js. O problema: Preciso criar as rotas de registro e login para a tabela users que acabei de criar. Detalhes e Restrições: Crie uma rota POST /register e uma POST /login. Regra de negócio estrita: a senha NUNCA deve ser armazenada em texto puro. Utilize a biblioteca bcrypt para gerar e validar os hashes. Adicione blocos try/catch para tratar possíveis erros de banco de dados ou credenciais inválidas. Formato: Retorne apenas o código comentado das rotas do Express e um breve exemplo JSON de como o corpo da requisição (body) deve ser enviado pelo front-end. 
+
+"prompt para criar as rotas feito pela Kariny ": Atue como: Engenheiro de Software especialista em construção de APIs RESTful. O problema: Preciso implementar as rotas para criar novos posts e listar todos os posts na página inicial da minha aplicação. Detalhes e Restrições: Crie uma rota POST /posts que insere o conteúdo e o user_id na tabela posts com a data atual. Crie também uma rota GET /posts. Na rota GET, a query SQL deve fazer um JOIN com a tabela users para trazer o nome do autor do post, ordenando os resultados dos mais recentes para os mais antigos. Formato: Retorne apenas o código das rotas no Express, devidamente comentado e com tratamento de erros. 
+
+"prompt para criar curtir e favoritos feito pela Kariny ":Atue como: Desenvolvedor Back-end Sênior especialista em lógica de negócios e SQL.O problema: Preciso implementar a funcionalidade de curtir e descurtir posts utilizando a tabela favorites. O mesmo botão no front-end fará as duas ações (toggle).Detalhes e Restrições: Crie uma rota POST /posts/:id/favorite recebendo o user_id. A lógica deve ser: verificar se já existe um registro na tabela favorites ligando aquele user_id àquele post_id. Se existir, delete o registro (descurtir). Se não existir, insira o registro (curtir). Além disso, mostre como atualizar a query da rota GET /posts criada anteriormente para incluir uma contagem (COUNT) do total de likes de cada post.Formato: Retorne o código da nova rota de favoritar e a query SQL atualizada para a listagem de posts, explicando rapidamente a lógica do COUNT.
+
+
+Prompt para [Desenvolvimento do Frontend de Autenticação ] feito por [Matheus Carvalho]:
+
+"Atue como um desenvolvedor especialista em React. Preciso criar a interface e a lógica de comunicação do Frontend para um sistema de autenticação (Criar conta, Login e Logout) inspirado no Twitter, seguindo estritamente as tecnologias e padrões abaixo:
+
+Requisitos Técnicos do Frontend:
+1. Gerenciamento de Formulários: Utilizar a biblioteca 'react-hook-form' para capturar os dados de Login e Cadastro.
+2. Campos de Cadastro: Nome, E-mail, Senha e Confirmação de Senha.
+3. Validação: Campos obrigatórios, formato de e-mail válido, tamanho mínimo de senha e validação customizada para garantir que a 'Confirmação de Senha' seja igual à 'Senha'.
+4. Estado Global de Autenticação: Utilizar a Context API do React para criar um 'AuthContext' que armazene o estado do usuário logado e exponha as funções de 'login', 'register' e 'logout'.
+5. Roteamento: Utilizar o 'react-router-dom' (abordagem clássica BrowserRouter) para gerenciar as rotas de '/login', '/cadastro' e a rota principal '/' protegida.
+6. Requisições HTTP: Configurar chamadas usando Axios (método POST) para enviar os dados para o endpoint do Backend Express, tratando adequadamente os erros dentro do bloco catch e exibindo mensagens descritivas na tela.
+
+Importante: A senha deve ser enviada para o servidor de forma segura para que o Backend faça o HASH (nunca salvar texto puro). Crie os componentes funcionais estruturados de forma modular dentro do diretório '/Frontend'.
+
+Por favor, forneça o código para:
+- O arquivo AuthContext.jsx (gerenciando o estado global do usuário, chamadas Axios e persistência do estado se necessário)
+- Os componentes das páginas Login.jsx e Cadastro.jsx utilizando react-hook-form com mensagens de erro."
+
+
+
+Prompt para [Desenvolvimento do Frontend da Página Inicial de Posts] feito por [Matheus Carvalho Pina]:
+"Atue como um desenvolvedor especialista em React. Preciso criar a interface e a lógica de comunicação do Frontend para a Página Inicial de Posts (Feed) do nosso sistema inspirado no Twitter, seguindo estritamente as tecnologias e padrões abaixo:
+Requisitos Técnicos do Frontend:
+Controle de Visualização Condicional: Utilizar o AuthContext (criado anteriormente) para recuperar o estado do usuário.
+Se o usuário não estiver logado, exibir apenas a lista de posts.
+Se o usuário estiver logado, exibir no topo um formulário com um campo de texto contendo o placeholder 'O que estou pensando?' e um botão de publicar, além de habilitar os botões de curtir/descurtir em cada post.
+Listagem de Posts (Feed): Utilizar o hook useEffect para fazer uma chamada HTTP GET usando Axios ao endpoint do Backend Express assim que o componente for montado, salvando os dados em um estado local para renderizar a lista.
+Criação de Posts: Para usuários logados, capturar o texto do novo post (usando estado local ou react-hook-form). Ao submeter, disparar uma chamada POST via Axios para o Backend e, em caso de sucesso, atualizar a lista de posts na tela imediatamente, sem recarregar a página.
+Sistema de Curtidas (Like/Unlike): Implementar a lógica de curtir/descurtir em cada post. Ao clicar no botão de curtir, disparar a requisição Axios correspondente para o Backend. Atualize o contador de curtidas e o status do botão (curtido/não curtido) na interface de forma dinâmica.
+Tratamento de Erros: Configurar blocos try...catch nas requisições de criação e curtida de posts, exibindo mensagens amigáveis em tela caso a requisição falhe.
+Importante: O token JWT do usuário logado deve ser enviado no cabeçalho (Header) das requisições de criação e curtida para que o Backend autorize as ações. Crie os componentes funcionais estruturados de forma modular.
+Por favor, forneça o código para:
+O componente da página principal Home.jsx (ou Feed.jsx), contendo a lógica de busca do feed e o campo de criação de posts.
+O componente isolado PostItem.jsx, responsável por renderizar cada post individualmente e gerenciar a lógica dos botões e contadores de curtir/descurtir."
+
+
+"prompt para criar gitignore feito pela Kariny ":Atue como: Desenvolvedor Front-end Sênior especialista em React. O problema: Preciso implementar uma "Feature Extra" para a minha avaliação: um botão de troca de tema (Claro/Escuro) global para a aplicação. Detalhes e Restrições: Utilize a Context API (useContext) e useState do React para gerenciar o estado do tema. O tema escolhido deve ser salvo no localStorage para que a preferência do usuário não seja perdida ao recarregar a página (conforme as boas práticas da Aula 10). Aplique o tema alternando uma classe CSS no elemento <body> ou em uma div principal. Formato: Retorne o código do ThemeContext, o código de um botão de Toggle (ThemeButton) e um exemplo de CSS básico para as variáveis de cores. 
+
+"prompt para criar gitignore feito pela Kariny ": quero deixar o home mais bonito e com cara do twiter, o que pode ser feito para arrumar o design?
