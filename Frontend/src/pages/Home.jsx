@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext'; // <-- ATENÇÃO: coloquei o "s" em contexts, ajuste se a sua pasta for no singular
+import { useAuth } from '../context/AuthContext'; // Mantive o caminho da sua pasta
 import PostItem from "../components/PostItem";
 
 export default function Home() {
-  const { user, token } = useAuth(); // Pega o usuário logado e o token JWT do contexto
+  const { user, token } = useAuth();
   const [posts, setPosts] = useState([]);
   const [novoPostTexto, setNovoPostTexto] = useState('');
   const [erro, setErro] = useState('');
 
-  // Busca todos os posts ao montar o componente
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -17,7 +16,6 @@ export default function Home() {
   const fetchPosts = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/posts'); 
-      // CORREÇÃO 1: Pegar o array '.posts' de dentro da resposta do Back-end!
       setPosts(response.data.posts || []);
     } catch (err) {
       console.error(err);
@@ -25,64 +23,72 @@ export default function Home() {
     }
   };
 
-  // Envia um novo post para o servidor
   const handleCriarPost = async (e) => {
     e.preventDefault();
     if (!novoPostTexto.trim()) return;
 
     try {
       setErro('');
-      // Configura o cabeçalho com o Token JWT do usuário logado
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      };
-
-      // CORREÇÃO 2: Enviar exatamente os nomes que o Back-end pediu (user_id e content)
+      const config = { headers: { Authorization: `Bearer ${token}` } };
       const response = await axios.post('http://localhost:3000/api/posts', { 
         user_id: user?.id, 
         content: novoPostTexto 
       }, config);
 
-      // Atualiza a lista imediatamente colocando o novo post no topo
       setPosts([response.data.post, ...posts]);
-      setNovoPostTexto(''); // Limpa o campo de texto
+      setNovoPostTexto(''); 
     } catch (err) {
       console.error(err);
-      setErro(err.response?.data?.error || 'Falha ao publicar o post. Tente novamente.');
+      setErro(err.response?.data?.error || 'Falha ao publicar o post.');
     }
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <h2>Página Inicial</h2>
+    // Container principal imitando o Feed do Twitter
+    <div style={{ maxWidth: '600px', margin: '0 auto', borderLeft: '1px solid #eff3f4', borderRight: '1px solid #eff3f4', minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
+      
+      {/* Cabeçalho fixo */}
+      <div style={{ padding: '15px 20px', borderBottom: '1px solid #eff3f4', position: 'sticky', top: 0, backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)' }}>
+        <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold' }}>Página Inicial</h2>
+      </div>
 
-      {erro && <p style={{ color: 'red' }}>{erro}</p>}
+      {erro && <p style={{ color: 'red', padding: '0 20px' }}>{erro}</p>}
 
-      {/* REQUISITO: Exibição condicional - Formulário só aparece se o usuário estiver logado */}
+      {/* Área de Criar Post */}
       {user ? (
-        <form onSubmit={handleCriarPost} style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
-          <textarea
-            value={novoPostTexto}
-            onChange={(e) => setNovoPostTexto(e.target.value)}
-            placeholder="O que estou pensando?"
-            rows="3"
-            style={{ width: '100%', padding: '10px', borderRadius: '5px', borderColor: '#ccc', resize: 'none' }}
-          />
-          <button 
-            type="submit" 
-            style={{ marginTop: '10px', alignSelf: 'flex-end', padding: '8px 16px', backgroundColor: '#1DA1F2', color: '#fff', border: 'none', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold' }}
-          >
-            Publicar
-          </button>
-        </form>
+        <div style={{ padding: '20px', borderBottom: '1px solid #eff3f4', display: 'flex', gap: '15px' }}>
+          {/* Avatar Fake */}
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#ccc', flexShrink: 0 }}></div>
+          
+          <form onSubmit={handleCriarPost} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <textarea
+              value={novoPostTexto}
+              onChange={(e) => setNovoPostTexto(e.target.value)}
+              placeholder="O que está acontecendo?"
+              rows="2"
+              style={{ width: '100%', padding: '10px 0', border: 'none', outline: 'none', resize: 'none', fontSize: '20px', fontFamily: 'inherit' }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid #eff3f4', paddingTop: '10px', marginTop: '10px' }}>
+              <button 
+                type="submit" 
+                disabled={!novoPostTexto.trim()}
+                style={{ padding: '10px 20px', backgroundColor: novoPostTexto.trim() ? '#1DA1F2' : '#8ED0F9', color: '#fff', border: 'none', borderRadius: '9999px', cursor: novoPostTexto.trim() ? 'pointer' : 'default', fontWeight: 'bold', fontSize: '15px' }}
+              >
+                Postar
+              </button>
+            </div>
+          </form>
+        </div>
       ) : (
-        <p style={{ color: '#666', fontStyle: 'italic' }}>Faça login para poder publicar e curtir posts.</p>
+        <div style={{ padding: '20px', borderBottom: '1px solid #eff3f4', textAlign: 'center', backgroundColor: '#f7f9f9' }}>
+          <p style={{ color: '#536471', margin: 0 }}>Faça login para publicar e interagir.</p>
+        </div>
       )}
 
-      {/* Listagem de Posts */}
-      <div>
+      {/* Lista de Posts */}
+      <div style={{ backgroundColor: '#fff' }}>
         {posts.length === 0 ? (
-          <p>Nenhum post encontrado.</p>
+          <p style={{ padding: '20px', textAlign: 'center', color: '#536471' }}>Nenhum post encontrado.</p>
         ) : (
           posts.map(post => (
             <PostItem key={post.id} post={post} />

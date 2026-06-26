@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext({});
 
-// Configuração base do Axios (ajuste a URL para o seu backend Express)
+// CORREÇÃO: Ajustado para a porta 3000 (onde o seu Back-end está rodando)
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api'
+  baseURL: 'http://localhost:3000/api'
 });
 
 export const AuthProvider = ({ children }) => {
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Enviamos a senha em texto plano pela rede (idealmente via HTTPS) 
       // O backend Express se encarregará de fazer o HASH usando bcrypt
-      const response = await api.post('/auth/register', { nome, email, password });
+      const response = await api.post('/auth/register', { username: nome, email, password });
       
       const { user, token } = response.data;
 
