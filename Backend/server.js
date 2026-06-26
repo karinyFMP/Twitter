@@ -1,19 +1,17 @@
 const express = require('express');
+const cors = require('cors'); // 1. Importe o cors
+const postRoutes = require('./src/routes/postRoutes'); // Ajuste o caminho se precisar
+const authRoutes = require('./src/routes/authRoutes');
+
 const app = express();
 
-// Middleware para processar JSON no body das requisições
-app.use(express.json()); 
+// 2. Libere o CORS *ANTES* das rotas
+app.use(cors()); 
+app.use(express.json());
 
-// Importação das rotas
-const authRoutes = require('./src/routes/authRoutes');
-const postRoutes = require('./src/routes/postRoutes');
-
-// Uso das rotas no Express
-app.use(authRoutes);
-app.use(postRoutes);
-// Registro das rotas na aplicação
-app.use(authRoutes);
-app.use(postRoutes);
+// 3. Conecte as rotas (isso resolve o 404)
+app.use('/api/posts', postRoutes);
+app.use('/api/auth', authRoutes); // Aproveitando para já ligar a rota de login/cadastro
 
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');

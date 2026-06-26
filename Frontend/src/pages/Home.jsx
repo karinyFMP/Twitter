@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext'; // Ajuste o caminho conforme seu projeto
+import { useAuth } from '../context/AuthContext'; // <-- ATENÇÃO: coloquei o "s" em contexts, ajuste se a sua pasta for no singular
 import PostItem from "../components/PostItem";
 
 export default function Home() {
@@ -16,8 +16,9 @@ export default function Home() {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/posts'); // Ajuste a URL se necessário
-      setPosts(response.data);
+      const response = await axios.get('http://localhost:3000/api/posts'); 
+      // CORREÇÃO 1: Pegar o array '.posts' de dentro da resposta do Back-end!
+      setPosts(response.data.posts || []);
     } catch (err) {
       console.error(err);
       setErro('Não foi possível carregar os posts.');
@@ -36,16 +37,18 @@ export default function Home() {
         headers: { Authorization: `Bearer ${token}` }
       };
 
+      // CORREÇÃO 2: Enviar exatamente os nomes que o Back-end pediu (user_id e content)
       const response = await axios.post('http://localhost:3000/api/posts', { 
-        conteudo: novoPostTexto 
+        user_id: user?.id, 
+        content: novoPostTexto 
       }, config);
 
-      // Atualiza a lista imediatamente colocando o novo post no topo, sem dar F5
-      setPosts([response.data, ...posts]);
+      // Atualiza a lista imediatamente colocando o novo post no topo
+      setPosts([response.data.post, ...posts]);
       setNovoPostTexto(''); // Limpa o campo de texto
     } catch (err) {
       console.error(err);
-      setErro(err.response?.data?.message || 'Falha ao publicar o post. Tente novamente.');
+      setErro(err.response?.data?.error || 'Falha ao publicar o post. Tente novamente.');
     }
   };
 

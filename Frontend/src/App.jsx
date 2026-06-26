@@ -11,7 +11,6 @@ function App() {
   const { user } = useAuth(); // Pega o usuário do contexto para saber se está logado
 
   return (
-    <BrowserRouter>
       <Routes>
         {/* Rota Raiz: Acessa a Home (Feed) */}
         <Route path="/" element={<Home />} />
@@ -30,7 +29,6 @@ function App() {
         {/* Rota de Fallback: Se digitar qualquer coisa errada, volta para a Home */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </BrowserRouter>
   );
 }
 
